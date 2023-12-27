@@ -52,7 +52,7 @@ const RegisterScreen = ({ navigation }) => {
       );
 
       if (response.status === 200) {
-        setSuccessMessage("Successfully registered!");
+        setSuccessMessage("🥳🤗 Successfully registered!");
         setErrorMessage("");
         await AsyncStorage.setItem("userDetails", JSON.stringify(payload));
         navigation.navigate("Login");
@@ -63,7 +63,7 @@ const RegisterScreen = ({ navigation }) => {
     } catch (error) {
       console.error("Error:", error.message);
       setSuccessMessage("");
-      setErrorMessage("Registration failed. Please try again.");
+      setErrorMessage("☹️😥Registration failed. Please try again.");
     }
   };
 
@@ -190,6 +190,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textDecorationLine: "underline",
     textAlign: "center",
+  },
+  successText: {
+    fontWeight: "bold",
+    color: "green",
+  },
+  errorText: {
+    fontWeight: "bold",
+    color: "red",
   },
 });
 
