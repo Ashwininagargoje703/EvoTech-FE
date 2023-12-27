@@ -79,16 +79,19 @@ const FormListScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {Array.isArray(forms) &&
-        (forms.length === 0 ? (
-          <ActivityIndicator size="large" color="#0000ff" />
+      {Array.isArray(forms) ? (
+        forms.length === 0 ? (
+          <Text>No Data Found</Text>
         ) : (
           <FlatList
             data={forms}
             renderItem={renderFormItem}
             keyExtractor={(item) => item._id.toString()}
           />
-        ))}
+        )
+      ) : (
+        <ActivityIndicator size="large" color="#0000ff" />
+      )}
     </View>
   );
 };

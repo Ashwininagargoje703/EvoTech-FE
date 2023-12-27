@@ -9,10 +9,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../context/AuthContext";
-import { Alert } from "react-native";
 import { Card, IconButton, TextInput } from "react-native-paper";
-import { Feather } from "@expo/vector-icons";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../store/userSlice";
 
@@ -22,7 +19,6 @@ const LoginScreen = ({ navigation }) => {
   const { user, setUser } = useContext(AuthContext);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const dispatch = useDispatch();
-  const { user: userData } = useSelector((store) => store.user);
 
   const togglePasswordVisibility = () => {
     setSecureTextEntry(!secureTextEntry);

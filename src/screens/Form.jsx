@@ -55,7 +55,7 @@ const Form = ({ navigation }) => {
       allowsEditing: true,
     });
 
-    if (!pickerResult.cancelled) {
+    if (!pickerResult.canceled) {
       setSelectedImageUri(pickerResult.uri); // Set the selected image URI
     }
     setModalVisible(false);
@@ -64,7 +64,7 @@ const Form = ({ navigation }) => {
   const handleSubmit = async () => {
     try {
       if (!user.email) {
-        Alert.alert("☹️ Not Logged In", "Please login to submit the form.", [
+        Alert.alert("Not Logged In", "Please login to submit the form.", [
           {
             text: "Cancel",
             style: "cancel",
@@ -165,18 +165,27 @@ const Form = ({ navigation }) => {
             >
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                  <TouchableOpacity
-                    onPress={selectImageFromGallery}
-                    style={{ justifyContent: "center", alignItems: "center" }}
-                  >
-                    <Text>Select From Galary</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={imageClickFromCamera}
-                    style={{ justifyContent: "center", alignItems: "center" }}
-                  >
-                    <Text>Open Camera</Text>
-                  </TouchableOpacity>
+                  <Text>Select Gallary Or Camera For Upload Image</Text>
+                  <View style={{ flexDirection: "row", gap: 30 }}>
+                    <TouchableOpacity
+                      onPress={selectImageFromGallery}
+                      style={{ justifyContent: "center", alignItems: "center" }}
+                    >
+                      <Image
+                        source={require("../../assets/Galary.png")}
+                        style={styles.Image}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={imageClickFromCamera}
+                      style={{ justifyContent: "center", alignItems: "center" }}
+                    >
+                      <Image
+                        source={require("../../assets/camer.png")}
+                        style={styles.Image}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             </Modal>
@@ -291,13 +300,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22,
+    flexDirection: "row",
   },
   modalView: {
-    margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
+    gap: 40,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -326,6 +336,14 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
+  },
+
+  Image: {
+    width: 40,
+    height: 40,
+    marginBottom: 10,
+    borderRadius: 8,
+    resizeMode: "cover",
   },
 });
 
