@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "EvoTech",
+    "slug": "my-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/evotech.jpeg",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash_screen.jpg",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/evotech.jpeg",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.evotech",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+        }
+      ]
+    ],
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "122e2e31-dd9d-446f-a1da-90c80ed7f912"
+      }
+    }
+  }
+}
