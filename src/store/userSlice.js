@@ -13,18 +13,12 @@ const userSlice = createSlice({
     user: {},
   },
 
-  reducers: {
-    setUserData: (state, action) => {
-      state.user = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.user = action.payload;
     });
   },
 });
-
-export const { setUserData } = userSlice.actions;
 
 export default userSlice.reducer;

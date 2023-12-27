@@ -14,6 +14,7 @@ import { getAllForms } from "../store/formSlice";
 import { base_url } from "../api/http";
 import axios from "axios";
 import { ActivityIndicator, Snackbar } from "react-native-paper";
+import Bottom from "../components/Bottom";
 
 const FormListScreen = ({ navigation }) => {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
@@ -101,6 +102,8 @@ const FormListScreen = ({ navigation }) => {
         <ActivityIndicator size="large" color="#0000ff" />
       )}
 
+      <Bottom />
+
       <Snackbar
         visible={snackbarVisible}
         onDismiss={() => setSnackbarVisible(false)}
@@ -120,7 +123,6 @@ const FormListScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
   },
   heading: {
     fontWeight: "bold",

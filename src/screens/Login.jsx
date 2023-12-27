@@ -26,14 +26,23 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      let payload = {
-        email: email.toLowerCase(),
-        password,
-      };
-      dispatch(loginUser(payload));
-      await AsyncStorage.setItem("userDetails", JSON.stringify(payload));
-      setUser(payload);
-      navigation.navigate("Form");
+      const userDetails = await AsyncStorage.getItem("userDetails");
+      if (userDetails !== null) {
+        const storedUser = JSON.parse(userDetails);
+
+        if (
+          email.toLowerCase() === storedUser.email &&
+          password === storedUser.password
+        ) {
+          dispatch(loginUser(storedUser));
+          setUser(storedUser);
+          navigation.navigate("Form");
+        } else {
+          alert("Incorrect email or password. Please try again.");
+        }
+      } else {
+        alert("No user found for the entered email. Please register.");
+      }
     } catch (error) {
       console.error("Error:", error.message);
     }

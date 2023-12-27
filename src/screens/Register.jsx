@@ -41,15 +41,11 @@ const RegisterScreen = ({ navigation }) => {
       };
       console.log("Payload", payload);
 
-      const response = await axios.post(
-        "https://evotech-be-production.up.railway.app/user/register",
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post(`${base_url}/user/register`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.status === 200) {
         setSuccessMessage("🥳🤗 Successfully registered!");

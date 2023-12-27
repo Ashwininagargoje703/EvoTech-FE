@@ -12,9 +12,11 @@ import RegisterScreen from "./Register";
 import Logout from "./Logout";
 import Form from "./Form";
 import { IconButton } from "react-native-paper";
-import Icon from "react-native-vector-icons/FontAwesome"; // Replace 'FontAwesome' with the icon pack you want to use
+import AntDesign from "react-native-vector-icons/AntDesign"; // Replace 'FontAwesome' with the icon pack you want to use
 import FormListScreen from "./FormList";
 import EditForm from "./EditForm";
+import { Ionicons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 const Drawer = createDrawerNavigator();
 
@@ -65,11 +67,49 @@ export default function AllRoutes({ navigation }) {
         ),
       }}
     >
-      {!user && <Drawer.Screen name="Login" component={LoginScreen} />}
+      {!user && (
+        <Drawer.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{
+            drawerIcon: ({ color, size }) => (
+              <Ionicons name="person-add-sharp" size={size} color={color} />
+            ),
+          }}
+        />
+      )}
 
-      <Drawer.Screen name="Form" component={Form} />
-      {user && <Drawer.Screen name="FormList" component={FormListScreen} />}
-      {user && <Drawer.Screen name="Logout" component={Logout} />}
+      <Drawer.Screen
+        name="Form"
+        component={Form}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <AntDesign name="addfile" size={size} color={color} />
+          ),
+        }}
+      />
+      {user && (
+        <Drawer.Screen
+          name="FormList"
+          component={FormListScreen}
+          options={{
+            drawerIcon: ({ color, size }) => (
+              <AntDesign name="profile" size={size} color={color} />
+            ),
+          }}
+        />
+      )}
+      {user && (
+        <Drawer.Screen
+          name="Logout"
+          component={Logout}
+          options={{
+            drawerIcon: ({ color, size }) => (
+              <Ionicons name="person-remove" size={size} color={color} />
+            ),
+          }}
+        />
+      )}
       <Drawer.Screen
         name="Register"
         component={RegisterScreen}

@@ -3,7 +3,12 @@ import { StyleSheet, Text, View } from "react-native";
 import AllRoutes from "./src/screens/AllRoutes";
 
 export default function App() {
-  return <AllRoutes />;
+  return (
+    <>
+      <StatusBar />
+      <AllRoutes />
+    </>
+  );
 }
 
 const styles = StyleSheet.create({

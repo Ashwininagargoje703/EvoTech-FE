@@ -16,6 +16,10 @@ import { Feather } from "@expo/vector-icons";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllForms } from "../store/formSlice";
+import { base_url } from "../api/http";
+import { KeyboardAvoidingView, Platform } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Bottom from "../components/Bottom";
 
 const Form = ({ navigation }) => {
   const [title, setTitle] = useState("");
@@ -24,6 +28,7 @@ const Form = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
@@ -42,7 +47,7 @@ const Form = ({ navigation }) => {
     });
 
     if (!pickerResult.canceled) {
-      setSelectedImageUri(pickerResult.uri); // Set the selected image URI
+      setSelectedImageUri(pickerResult.uri);
     }
     setModalVisible(false);
   };
@@ -60,13 +65,15 @@ const Form = ({ navigation }) => {
     });
 
     if (!pickerResult.canceled) {
-      setSelectedImageUri(pickerResult.assets); // Set the selected image URI
+      setSelectedImageUri(pickerResult.uri); // Set the selected image URI
     }
     setModalVisible(false);
   };
 
   const handleSubmit = async () => {
     try {
+      setIsLoading(true);
+
       if (!user.email) {
         Alert.alert("Not Logged In", "Please login to submit the form.", [
           {
@@ -80,8 +87,10 @@ const Form = ({ navigation }) => {
         ]);
         return;
       }
+
       if (!selectedImageUri) {
         alert("Please select an image");
+        setIsLoading(false);
         return;
       }
 
@@ -89,11 +98,11 @@ const Form = ({ navigation }) => {
       formData.append("image", {
         uri: selectedImageUri,
         type: "image/jpeg", // Update with the appropriate image type
-        name: "image.jpg", // Update with the appropriate image name
+        name: "image" + new Date().getTime() + ".jpg", // Update with the appropriate image name
       });
 
       const imageUploadResponse = await axios.post(
-        "https://evotech-be-production.up.railway.app/form/upload-image",
+        `${base_url}/form/upload-image`,
         formData,
         {
           headers: {
@@ -112,7 +121,7 @@ const Form = ({ navigation }) => {
       };
 
       const formSubmitResponse = await axios.post(
-        "https://evotech-be-production.up.railway.app/form/submitFrom",
+        `${base_url}/form/submitFrom`,
         formDataPayload,
         {
           headers: {
@@ -122,13 +131,13 @@ const Form = ({ navigation }) => {
       );
 
       if (formSubmitResponse.data.success) {
-        console.log("Form updated successfully!");
         dispatch(getAllForms());
         setSnackbarMessage("Form updated successfully!");
         setTitle("");
         setDescription("");
         setSelectedImageUri(null);
         setSnackbarVisible(true);
+        navigation.navigate("FormList");
       } else {
         console.error(
           "Form submission failed:",
@@ -137,112 +146,131 @@ const Form = ({ navigation }) => {
       }
     } catch (error) {
       console.error("Error submitting form:", error.message);
+    } finally {
+      setIsLoading(false); // Set loading state back to false when submission completes
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Create Form</Text>
-      <Card style={styles.card}>
-        <TouchableOpacity
-          onPress={() => setModalVisible(true)}
-          style={{ justifyContent: "center", alignItems: "center" }}
-        >
-          <View style={styles.imageContainer}>
-            {selectedImageUri ? (
-              <Image source={{ uri: selectedImageUri }} style={styles.image} />
-            ) : (
-              <Image
-                source={{
-                  uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbTARUXzSGvW92IbKIlYAmhlYg0keybYReTTH-96oCTBsWTCItKjnwZmU8EpEPS2COXtg&usqp=CAU",
-                }}
-                style={styles.image}
-              />
-            )}
-            <View style={styles.editIcon}>
-              <Feather name="edit-2" size={24} color="black" />
+    <KeyboardAwareScrollView
+      style={{ flex: 1 }}
+      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
+      <View style={styles.container}>
+        <Text style={styles.heading}>Create Form</Text>
+        <Card style={styles.card}>
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            style={{ justifyContent: "center", alignItems: "center" }}
+          >
+            <View style={styles.imageContainer}>
+              {selectedImageUri ? (
+                <Image
+                  source={{ uri: selectedImageUri }}
+                  style={styles.image}
+                />
+              ) : (
+                <Image
+                  source={{
+                    uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbTARUXzSGvW92IbKIlYAmhlYg0keybYReTTH-96oCTBsWTCItKjnwZmU8EpEPS2COXtg&usqp=CAU",
+                  }}
+                  style={styles.image}
+                />
+              )}
+              <View style={styles.editIcon}>
+                <Feather name="edit-2" size={24} color="black" />
+              </View>
             </View>
-          </View>
 
-          <View style={styles.centeredView}>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={modalVisible}
-              onRequestClose={() => {
-                setModalVisible(!modalVisible);
-              }}
-            >
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <Text>Select Gallary Or Camera For Upload </Text>
-                  <View style={{ flexDirection: "row", gap: 30 }}>
-                    <TouchableOpacity
-                      onPress={selectImageFromGallery}
-                      style={{ justifyContent: "center", alignItems: "center" }}
-                    >
-                      <Image
-                        source={require("../../assets/Galary.png")}
-                        style={styles.Image}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={imageClickFromCamera}
-                      style={{ justifyContent: "center", alignItems: "center" }}
-                    >
-                      <Image
-                        source={require("../../assets/camer.png")}
-                        style={styles.Image}
-                      />
-                    </TouchableOpacity>
+            <View style={styles.centeredView}>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  setModalVisible(!modalVisible);
+                }}
+              >
+                <View style={styles.centeredView}>
+                  <View style={styles.modalView}>
+                    <Text>Select Gallary Or Camera For Upload </Text>
+                    <View style={{ flexDirection: "row", gap: 30 }}>
+                      <TouchableOpacity
+                        onPress={selectImageFromGallery}
+                        style={{
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Image
+                          source={require("../../assets/Galary.png")}
+                          style={styles.Image}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={imageClickFromCamera}
+                        style={{
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Image
+                          source={require("../../assets/camer.png")}
+                          style={styles.Image}
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
-              </View>
-            </Modal>
-          </View>
-        </TouchableOpacity>
-
-        <Text>Title</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Title"
-          value={title}
-          onChangeText={(text) => setTitle(text)}
-        />
-        <Text>Description</Text>
-
-        <TextInput
-          style={styles.input}
-          placeholder="Description"
-          multiline
-          numberOfLines={4}
-          value={description}
-          onChangeText={(text) => setDescription(text)}
-        />
-
-        <View style={styles.btncontainer}>
-          <TouchableOpacity style={styles.Button} onPress={handleSubmit}>
-            <Text style={styles.ButtonText}>Submit</Text>
+              </Modal>
+            </View>
           </TouchableOpacity>
-        </View>
-      </Card>
 
-      <Snackbar
-        visible={snackbarVisible}
-        onDismiss={() => setSnackbarVisible(false)}
-        duration={3000} // Duration in milliseconds to show the Snackbar
-        style={styles.snackbar} // You can adjust the styling here
-      >
-        {snackbarMessage}
-      </Snackbar>
-    </View>
+          <Text>Title</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Title"
+            value={title}
+            onChangeText={(text) => setTitle(text)}
+          />
+          <Text>Description</Text>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Description"
+            multiline
+            numberOfLines={4}
+            value={description}
+            onChangeText={(text) => setDescription(text)}
+          />
+
+          <View style={styles.btncontainer}>
+            <TouchableOpacity style={styles.Button} onPress={handleSubmit}>
+              <Text style={styles.ButtonText}>
+                {isLoading ? "Submitting..." : "Submit"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Card>
+
+        <Snackbar
+          visible={snackbarVisible}
+          onDismiss={() => setSnackbarVisible(false)}
+          duration={3000} // Duration in milliseconds to show the Snackbar
+          style={styles.snackbar} // You can adjust the styling here
+        >
+          {snackbarMessage}
+        </Snackbar>
+      </View>
+    </KeyboardAwareScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
+    height: "100%",
   },
   card: {
     padding: 20,
@@ -258,7 +286,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     overflow: "hidden",
     flexDirection: "row",
-    position: "relative",
     marginBottom: 20,
   },
   heading: {
