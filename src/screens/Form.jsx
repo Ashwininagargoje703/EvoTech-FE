@@ -11,17 +11,21 @@ import {
   Pressable,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { Card } from "react-native-paper";
+import { Card, Snackbar } from "react-native-paper";
 import { Feather } from "@expo/vector-icons";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllForms } from "../store/formSlice";
 
 const Form = ({ navigation }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedImageUri, setSelectedImageUri] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const { user } = useSelector((store) => store.user);
+  const dispatch = useDispatch();
 
   const selectImageFromGallery = async () => {
     let permissionResult =
@@ -37,7 +41,7 @@ const Form = ({ navigation }) => {
       quality: 1,
     });
 
-    if (!pickerResult.cancelled) {
+    if (!pickerResult.canceled) {
       setSelectedImageUri(pickerResult.uri); // Set the selected image URI
     }
     setModalVisible(false);
@@ -56,7 +60,7 @@ const Form = ({ navigation }) => {
     });
 
     if (!pickerResult.canceled) {
-      setSelectedImageUri(pickerResult.uri); // Set the selected image URI
+      setSelectedImageUri(pickerResult.assets); // Set the selected image URI
     }
     setModalVisible(false);
   };
@@ -88,8 +92,6 @@ const Form = ({ navigation }) => {
         name: "image.jpg", // Update with the appropriate image name
       });
 
-      console.log("imagUrl", selectedImageUri);
-
       const imageUploadResponse = await axios.post(
         "https://evotech-be-production.up.railway.app/form/upload-image",
         formData,
@@ -102,14 +104,12 @@ const Form = ({ navigation }) => {
 
       const imageUrl = imageUploadResponse.data.data;
 
-      // Assuming 'userId' is available
       const formDataPayload = {
-        userId: user._id, // Replace with the actual user ID
+        userId: user._id,
         title,
         description,
         imageUrl: imageUrl,
       };
-      // console.log(formDataPayload);
 
       const formSubmitResponse = await axios.post(
         "https://evotech-be-production.up.railway.app/form/submitFrom",
@@ -122,7 +122,13 @@ const Form = ({ navigation }) => {
       );
 
       if (formSubmitResponse.data.success) {
-        console.log("Form submitted successfully!");
+        console.log("Form updated successfully!");
+        dispatch(getAllForms());
+        setSnackbarMessage("Form updated successfully!");
+        setTitle("");
+        setDescription("");
+        setSelectedImageUri(null);
+        setSnackbarVisible(true);
       } else {
         console.error(
           "Form submission failed:",
@@ -146,14 +152,18 @@ const Form = ({ navigation }) => {
             {selectedImageUri ? (
               <Image source={{ uri: selectedImageUri }} style={styles.image} />
             ) : (
-              <View style={styles.placeholderImage} />
+              <Image
+                source={{
+                  uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbTARUXzSGvW92IbKIlYAmhlYg0keybYReTTH-96oCTBsWTCItKjnwZmU8EpEPS2COXtg&usqp=CAU",
+                }}
+                style={styles.image}
+              />
             )}
             <View style={styles.editIcon}>
               <Feather name="edit-2" size={24} color="black" />
             </View>
           </View>
 
-          {/* modal */}
           <View style={styles.centeredView}>
             <Modal
               animationType="slide"
@@ -165,7 +175,7 @@ const Form = ({ navigation }) => {
             >
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                  <Text>Select Gallary Or Camera For Upload Image</Text>
+                  <Text>Select Gallary Or Camera For Upload </Text>
                   <View style={{ flexDirection: "row", gap: 30 }}>
                     <TouchableOpacity
                       onPress={selectImageFromGallery}
@@ -190,7 +200,6 @@ const Form = ({ navigation }) => {
               </View>
             </Modal>
           </View>
-          {/* modal */}
         </TouchableOpacity>
 
         <Text>Title</Text>
@@ -217,6 +226,15 @@ const Form = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </Card>
+
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        duration={3000} // Duration in milliseconds to show the Snackbar
+        style={styles.snackbar} // You can adjust the styling here
+      >
+        {snackbarMessage}
+      </Snackbar>
     </View>
   );
 };
@@ -344,6 +362,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 8,
     resizeMode: "cover",
+  },
+
+  snackbar: {
+    backgroundColor: "#114c8d",
   },
 });
 

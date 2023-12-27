@@ -120,9 +120,8 @@ const EditForm = ({ route }) => {
       );
 
       if (formSubmitResponse.data.success) {
-        console.log("Form updated successfully!");
         dispatch(getAllForms());
-        setSnackbarMessage("Form updated successfully!"); // Set message for the Snackbar
+        setSnackbarMessage("Form updated Or Edit successfully!"); // Set message for the Snackbar
         setSnackbarVisible(true);
       } else {
         console.error(
@@ -147,7 +146,12 @@ const EditForm = ({ route }) => {
             {selectedImageUri ? (
               <Image source={{ uri: selectedImageUri }} style={styles.image} />
             ) : (
-              <View style={styles.placeholderImage} />
+              <Image
+                source={{
+                  uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbTARUXzSGvW92IbKIlYAmhlYg0keybYReTTH-96oCTBsWTCItKjnwZmU8EpEPS2COXtg&usqp=CAU",
+                }}
+                style={styles.image}
+              />
             )}
             <View style={styles.editIcon}>
               <Feather name="edit-2" size={24} color="black" />
@@ -166,18 +170,27 @@ const EditForm = ({ route }) => {
             >
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                  <TouchableOpacity
-                    onPress={selectImageFromGallery}
-                    style={{ justifyContent: "center", alignItems: "center" }}
-                  >
-                    <Text>Select From Galary</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={imageClickFromCamera}
-                    style={{ justifyContent: "center", alignItems: "center" }}
-                  >
-                    <Text>Open Camera</Text>
-                  </TouchableOpacity>
+                  <Text>Select Gallary Or Camera For Upload </Text>
+                  <View style={{ flexDirection: "row", gap: 30 }}>
+                    <TouchableOpacity
+                      onPress={selectImageFromGallery}
+                      style={{ justifyContent: "center", alignItems: "center" }}
+                    >
+                      <Image
+                        source={require("../../assets/Galary.png")}
+                        style={styles.Image}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={imageClickFromCamera}
+                      style={{ justifyContent: "center", alignItems: "center" }}
+                    >
+                      <Image
+                        source={require("../../assets/camer.png")}
+                        style={styles.Image}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             </Modal>
@@ -303,11 +316,11 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   modalView: {
-    margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
+    gap: 40,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -336,6 +349,13 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
+  },
+  Image: {
+    width: 40,
+    height: 40,
+    marginBottom: 10,
+    borderRadius: 8,
+    resizeMode: "cover",
   },
   snackbar: {
     backgroundColor: "#114c8d",

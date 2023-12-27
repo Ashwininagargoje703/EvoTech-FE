@@ -53,6 +53,7 @@ export default function AllRoutes({ navigation }) {
   return (
     <Drawer.Navigator
       initialRouteName="Login"
+      backBehavior="history"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerTitleAlign: "center",

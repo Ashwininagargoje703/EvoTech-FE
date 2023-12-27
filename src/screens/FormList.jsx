@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,9 +13,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllForms } from "../store/formSlice";
 import { base_url } from "../api/http";
 import axios from "axios";
-import { ActivityIndicator } from "react-native-paper";
+import { ActivityIndicator, Snackbar } from "react-native-paper";
 
 const FormListScreen = ({ navigation }) => {
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const { forms } = useSelector((store) => store.form);
   const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
@@ -43,7 +45,9 @@ const FormListScreen = ({ navigation }) => {
               const response = await axios.post(`${base_url}/form/deleteForm`, {
                 formId,
               });
-              console.log("Form deleted:", response.data);
+              setSnackbarMessage("Form deleted successfully");
+              setSnackbarVisible(true);
+              dispatch(getAllForms());
               dispatch(getAllForms());
             },
           },
@@ -67,7 +71,7 @@ const FormListScreen = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => navigation.navigate("EditForm", { formData2: item })}
           >
-            <Feather name="edit-2" size={18} color="black" />
+            <Feather name="edit-2" size={18} color="#114c8d" />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => deleteForm(item._id)}>
             <Feather name="trash-2" size={20} color="red" />
@@ -83,15 +87,32 @@ const FormListScreen = ({ navigation }) => {
         forms.length === 0 ? (
           <Text>No Data Found</Text>
         ) : (
-          <FlatList
-            data={forms}
-            renderItem={renderFormItem}
-            keyExtractor={(item) => item._id.toString()}
-          />
+          <>
+            <Text style={styles.heading}>You Forms Submited Data</Text>
+
+            <FlatList
+              data={forms}
+              renderItem={renderFormItem}
+              keyExtractor={(item) => item._id.toString()}
+            />
+          </>
         )
       ) : (
         <ActivityIndicator size="large" color="#0000ff" />
       )}
+
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        duration={3000} // Adjust the duration as needed
+        action={{
+          label: "Dismiss",
+          onPress: () => setSnackbarVisible(false),
+        }}
+        style={styles.snackbar}
+      >
+        {snackbarMessage}
+      </Snackbar>
     </View>
   );
 };
@@ -101,9 +122,15 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
+  heading: {
+    fontWeight: "bold",
+    textAlign: "center",
+    paddingBottom: 10,
+    fontSize: 16,
+    color: "#114c8d",
+  },
   card: {
     flexDirection: "row",
-    alignItems: "center",
     marginBottom: 10,
     borderWidth: 1,
     borderColor: "#ccc",
@@ -113,8 +140,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   thumbnail: {
-    width: 100,
-    height: 100,
+    width: 120,
+    height: 120,
     borderRadius: 8,
     borderColor: "#ccc",
     borderWidth: 1,
@@ -126,6 +153,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "bold",
     marginBottom: 5,
+    fontSize: 16,
   },
   buttons: {
     position: "absolute",
@@ -134,6 +162,10 @@ const styles = StyleSheet.create({
     bottom: 10,
     justifyContent: "space-between",
     alignItems: "flex-end",
+  },
+
+  snackbar: {
+    backgroundColor: "#114c8d",
   },
 });
 
