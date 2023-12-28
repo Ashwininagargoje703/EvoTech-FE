@@ -18,7 +18,6 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const { user, setUser } = useContext(AuthContext);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-
   const dispatch = useDispatch();
 
   const togglePasswordVisibility = () => {
@@ -28,13 +27,16 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = async () => {
     try {
       const userDetails = await AsyncStorage.getItem("userDetails");
+      console.log(userDetails);
       if (userDetails !== null) {
         const storedUser = JSON.parse(userDetails);
 
         if (
-          email.toLowerCase() === storedUser.email &&
+          email.trim().toLowerCase() ===
+            storedUser.email.trim().toLowerCase() &&
           password === storedUser.password
         ) {
+          dispatch(loginUser(storedUser));
           setUser(storedUser);
           navigation.navigate("Form");
         } else {
