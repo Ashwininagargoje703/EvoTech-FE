@@ -18,6 +18,7 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const { user, setUser } = useContext(AuthContext);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+
   const dispatch = useDispatch();
 
   const togglePasswordVisibility = () => {
@@ -34,7 +35,6 @@ const LoginScreen = ({ navigation }) => {
           email.toLowerCase() === storedUser.email &&
           password === storedUser.password
         ) {
-          dispatch(loginUser(storedUser));
           setUser(storedUser);
           navigation.navigate("Form");
         } else {

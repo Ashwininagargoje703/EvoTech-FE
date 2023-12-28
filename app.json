@@ -4,22 +4,20 @@
     "slug": "my-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/evotech.jpeg",
+    "icon": "./assets/evotech.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash_screen.jpg",
+      "image": "./assets/splash_screen.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/evotech.jpeg",
+        "foregroundImage": "./assets/evotech.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.evotech",

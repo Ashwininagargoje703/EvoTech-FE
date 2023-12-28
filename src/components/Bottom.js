@@ -1,13 +1,10 @@
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
 import { AntDesign as AntDesignIcon } from "@expo/vector-icons";
 
 const Bottom = () => {
   const navigation = useNavigation();
-  const route = useRoute();
 
   const handlePress = () => {
     navigation.navigate("Form");
@@ -42,8 +39,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: "#e0e0e0",
     position: "absolute",
-    bottom: 0, // This ensures it's at the bottom
-    width: "100%", // Makes it take the full width
+    bottom: 0,
+    width: "100%",
   },
   bottomMenuItem: {
     flexDirection: "row",

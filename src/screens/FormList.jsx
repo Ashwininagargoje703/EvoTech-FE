@@ -107,7 +107,7 @@ const FormListScreen = ({ navigation }) => {
       <Snackbar
         visible={snackbarVisible}
         onDismiss={() => setSnackbarVisible(false)}
-        duration={3000} // Adjust the duration as needed
+        duration={3000}
         action={{
           label: "Dismiss",
           onPress: () => setSnackbarVisible(false),

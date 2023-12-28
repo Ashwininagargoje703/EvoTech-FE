@@ -12,11 +12,10 @@ import RegisterScreen from "./Register";
 import Logout from "./Logout";
 import Form from "./Form";
 import { IconButton } from "react-native-paper";
-import AntDesign from "react-native-vector-icons/AntDesign"; // Replace 'FontAwesome' with the icon pack you want to use
+import AntDesign from "react-native-vector-icons/AntDesign";
 import FormListScreen from "./FormList";
 import EditForm from "./EditForm";
 import { Ionicons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
 
 const Drawer = createDrawerNavigator();
 
@@ -50,7 +49,6 @@ const CustomDrawerContent = (props) => {
 
 export default function AllRoutes({ navigation }) {
   const { user } = useContext(AuthContext);
-  console.log("user", user);
 
   return (
     <Drawer.Navigator
@@ -130,8 +128,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between", // Adjust as needed
-    paddingHorizontal: 16, // Add padding for spacing
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
   },
   imageContainer: {
     alignItems: "center",

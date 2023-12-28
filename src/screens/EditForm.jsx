@@ -90,8 +90,8 @@ const EditForm = ({ route }) => {
       const formData = new FormData();
       formData.append("image", {
         uri: selectedImageUri,
-        type: "image/jpeg", // Update with the appropriate image type
-        name: "image" + new Date().getTime() + ".jpg", // Update with the appropriate image name
+        type: "image/jpeg",
+        name: "image" + new Date().getTime() + ".jpg",
       });
 
       const imageUploadResponse = await axios.post(
@@ -126,7 +126,7 @@ const EditForm = ({ route }) => {
 
       if (formSubmitResponse.data.success) {
         dispatch(getAllForms());
-        setSnackbarMessage("Form updated Or Edit successfully!"); // Set message for the Snackbar
+        setSnackbarMessage("Form updated Or Edit successfully!");
         setSnackbarVisible(true);
         navigation.navigate("FormList");
       } else {
@@ -138,7 +138,7 @@ const EditForm = ({ route }) => {
     } catch (error) {
       console.error("Error submitting form:", error.message);
     } finally {
-      setIsLoading(false); // Set loading state back to false when submission completes
+      setIsLoading(false);
     }
   };
 
@@ -250,8 +250,8 @@ const EditForm = ({ route }) => {
         <Snackbar
           visible={snackbarVisible}
           onDismiss={() => setSnackbarVisible(false)}
-          duration={3000} // Duration in milliseconds to show the Snackbar
-          style={styles.snackbar} // You can adjust the styling here
+          duration={3000}
+          style={styles.snackbar}
         >
           {snackbarMessage}
         </Snackbar>
@@ -333,7 +333,6 @@ const styles = StyleSheet.create({
   ButtonText: {
     color: "white",
   },
-  // modal
   centeredView: {
     flex: 1,
     justifyContent: "center",

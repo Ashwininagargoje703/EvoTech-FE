@@ -147,7 +147,7 @@ const Form = ({ navigation }) => {
     } catch (error) {
       console.error("Error submitting form:", error.message);
     } finally {
-      setIsLoading(false); // Set loading state back to false when submission completes
+      setIsLoading(false);
     }
   };
 
